@@ -59,8 +59,9 @@ def fetch_xauusd_fallback() -> tuple[float, float]:
         import yfinance as yf
         ticker     = yf.Ticker("GC=F")
         info       = ticker.fast_info
-        price      = float(info["last_price"])
-        prev_close = float(info["previous_close"])
+        hist       = ticker.history(period="2d", interval="1d")
+        price      = float(hist["Close"].iloc[-1])
+        prev_close = float(hist["Close"].iloc[-2])
         print(f"[fetch] FALLBACK yfinance XAUUSD: ${price:,.2f}")
         return price, prev_close
     except Exception as e:
