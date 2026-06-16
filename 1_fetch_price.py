@@ -1,29 +1,32 @@
 import requests
 import json
+import yfinance as yf
 from datetime import datetime, timezone, timedelta
+
 WIB = timezone(timedelta(hours=7))
+
 from config import (
-    GOLD_API_KEY, GOLD_API_URL,
     EXCHANGE_API_URL,
     ANTAM_JUAL_MARKUP, ANTAM_BUYBACK_MARKUP
 )
 
-def fetch_xauusd() -> float:
-    """Ambil harga XAUUSD dalam troy ounce dari Goldapi.io"""
-    headers = {
-        "x-access-token": GOLD_API_KEY,
-        "Content-Type": "application/json"
-    }
+
+def fetch_xauusd() -> tuple[float, float]:
+    """
+    Ambil harga XAUUSD dan prev_close dari Yahoo Finance (GC=F = Gold Futures).
+    Tidak perlu API key.
+    Returns: (harga_sekarang, prev_close)
+    """
     try:
-        res = requests.get(GOLD_API_URL, headers=headers, timeout=10)
-        res.raise_for_status()
-        data = res.json()
-        price = data.get("price", 0)
-        print(f"[fetch] XAUUSD: ${price:,.2f}")
-        return float(price)
+        ticker     = yf.Ticker("GC=F")
+        info       = ticker.fast_info
+        price      = float(info["last_price"])
+        prev_close = float(info["previous_close"])
+        print(f"[fetch] XAUUSD: ${price:,.2f} | Prev Close: ${prev_close:,.2f}")
+        return price, prev_close
     except Exception as e:
         print(f"[fetch] ERROR ambil XAUUSD: {e}")
-        return 0.0
+        return 0.0, 0.0
 
 
 def fetch_usd_idr() -> float:
@@ -43,42 +46,37 @@ def fetch_usd_idr() -> float:
 def get_price_data() -> dict:
     """
     Hitung semua data harga yang diperlukan untuk generate gambar.
-    
+
     Returns dict berisi:
     - xauusd_oz      : harga XAU per troy ounce (USD)
     - xauusd_gram    : harga XAU per gram (USD)
     - usd_idr        : kurs USD ke IDR
     - idr_per_gram   : harga emas per gram (IDR)
-    - antam_jual     : proyeksi harga jual Antam per gram (IDR)
-    - antam_buyback  : proyeksi harga buyback Antam per gram (IDR)
-    - change_pct     : perubahan harga (%) — dari API jika tersedia
+    - antam_jual     : estimasi harga jual Antam per gram (IDR)
+    - antam_buyback  : estimasi harga buyback Antam per gram (IDR)
+    - change_pct     : perubahan harga (%) vs prev close
     - change_idr     : selisih harga IDR per gram vs kemarin
     - timestamp      : waktu fetch (WIB)
     """
 
-    xauusd_oz  = fetch_xauusd()
-    usd_idr    = fetch_usd_idr()
+    xauusd_oz, prev_close = fetch_xauusd()
+    usd_idr               = fetch_usd_idr()
 
     # 1 troy ounce = 31.1035 gram
     TROY_OZ_TO_GRAM = 31.1035
 
-    xauusd_gram  = xauusd_oz / TROY_OZ_TO_GRAM
+    xauusd_gram  = xauusd_oz / TROY_OZ_TO_GRAM if xauusd_oz else 0
     idr_per_gram = xauusd_gram * usd_idr
 
     antam_jual    = idr_per_gram * ANTAM_JUAL_MARKUP
     antam_buyback = idr_per_gram * ANTAM_BUYBACK_MARKUP
 
-    # Simulasi change (idealnya ambil dari API previous close)
-    # Goldapi.io menyediakan field prev_close_price
-    try:
-        headers = {"x-access-token": GOLD_API_KEY, "Content-Type": "application/json"}
-        res = requests.get(GOLD_API_URL, headers=headers, timeout=10)
-        raw = res.json()
-        prev_close = raw.get("prev_close_price", xauusd_oz)
+    # Hitung perubahan vs prev close
+    if prev_close and prev_close > 0:
         change_oz  = xauusd_oz - prev_close
-        change_pct = (change_oz / prev_close * 100) if prev_close else 0
+        change_pct = (change_oz / prev_close) * 100
         change_idr = (change_oz / TROY_OZ_TO_GRAM) * usd_idr
-    except Exception:
+    else:
         change_pct = 0.0
         change_idr = 0.0
 
@@ -91,11 +89,12 @@ def get_price_data() -> dict:
         "antam_buyback" : antam_buyback,
         "change_pct"    : change_pct,
         "change_idr"    : change_idr,
-        "timestamp" : datetime.now(WIB).strftime("%d %b %Y %H:%M WIB")
+        "timestamp"     : datetime.now(WIB).strftime("%d %b %Y %H:%M WIB")
     }
 
     print(f"\n[fetch] ── RINGKASAN ──────────────────────")
     print(f"  XAUUSD/oz   : ${xauusd_oz:,.2f}")
+    print(f"  Prev Close  : ${prev_close:,.2f}")
     print(f"  XAUUSD/gram : ${xauusd_gram:,.4f}")
     print(f"  USD/IDR     : Rp {usd_idr:,.0f}")
     print(f"  IDR/gram    : Rp {idr_per_gram:,.0f}")
