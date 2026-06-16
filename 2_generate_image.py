@@ -187,7 +187,7 @@ def generate_image(data: dict) -> str:
 
     wm_text = "@brankasemas.idn"
     wm_w    = draw.textlength(wm_text, font=font_xs)
-    draw.text((W - wm_w - 24, y4), wm_text, font=font_xs, fill=(80, 80, 90))
+    draw.text((W - wm_w - 24, y4), wm_text, font=font_xs, fill=COLOR_WHITE)
 
     # ─── Simpan output ────────────────────────────────────────
     os.makedirs("output", exist_ok=True)
