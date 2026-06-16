@@ -19,6 +19,16 @@ HASHTAG_LIST = [
 ]
 
 
+Promosi_LIST = [
+    "Gabung ke grup WhatsApp untuk update, link ada di bio",
+    "Update terkini, join grup kami link di bio",
+    "Yuk bergabung dengan komunitas kami, link tersedia di bio",
+    "Info update join WhatsApp kami. Link bergabung ada di bio",
+    "Join grup WhatsApp kami untuk update terkini, link yang ada di bio",
+]
+
+
+
 def fmt_idr_caption(value: float, prefix: str = "Rp ") -> str:
     """Format angka IDR untuk caption: titik sebagai pemisah ribuan"""
     return f"{prefix}{abs(value):,.0f}".replace(",", ".")
@@ -47,6 +57,7 @@ def build_caption(data: dict) -> str:
         f"🛒 Estimasi Antam : {fmt_idr_caption(antam_jual)}/gr\n"
         f"💵 Antam Buyback: {fmt_idr_caption(antam_buyback)}/gr\n\n"
         f"💱 Kurs USD/IDR   : {fmt_idr_caption(usd_idr)}\n\n"
+        f"{random.choice(Promosi_LIST)}/gr\n\n"
         f"{random.choice(HASHTAG_LIST)}"
     )
 
