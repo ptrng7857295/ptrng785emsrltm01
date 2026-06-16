@@ -1,6 +1,7 @@
 import requests
 import json
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+WIB = timezone(timedelta(hours=7))
 from config import (
     GOLD_API_KEY, GOLD_API_URL,
     EXCHANGE_API_URL,
@@ -90,7 +91,7 @@ def get_price_data() -> dict:
         "antam_buyback" : antam_buyback,
         "change_pct"    : change_pct,
         "change_idr"    : change_idr,
-        "timestamp"     : datetime.now().strftime("%d %b %Y %H:%M WIB")
+        "timestamp" : datetime.now(WIB).strftime("%d %b %Y %H:%M WIB")
     }
 
     print(f"\n[fetch] ── RINGKASAN ──────────────────────")
