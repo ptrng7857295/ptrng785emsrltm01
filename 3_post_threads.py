@@ -18,7 +18,6 @@ def build_caption(data: dict) -> str:
     change_idr   = data.get("change_idr", 0)
     idr_per_gram = data.get("idr_per_gram", 0)
     antam_jual   = data.get("antam_jual", 0)
-    antam_buyback= data.get("antam_buyback", 0)
     usd_idr      = data.get("usd_idr", 0)
     timestamp    = data.get("timestamp", "")
 
@@ -141,7 +140,6 @@ if __name__ == "__main__":
         "xauusd_oz"     : 4072.43,
         "idr_per_gram"  : 2375201,
         "antam_jual"    : 2619000,
-        "antam_buyback" : 2393000,
         "change_pct"    : -3.64,
         "change_idr"    : -93693,
         "usd_idr"       : 18141,
