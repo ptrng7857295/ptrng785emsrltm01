@@ -144,8 +144,8 @@ def generate_image(data: dict) -> str:
     # ────────────────────────────────────────────────────────
     # KOTAK KIRI BAWAH: Estimasi Harga Jual Antam
     # ────────────────────────────────────────────────────────
-    box2_x1, box2_y1 = 24,  220
-    box2_x2, box2_y2 = 516, 340
+    box2_x1, box2_y1 = 24,  250
+    box2_x2, box2_y2 = 516, 370
 
     # Label
     label2   = "Estimasi Harga Jual Antam"
@@ -162,8 +162,8 @@ def generate_image(data: dict) -> str:
     # ────────────────────────────────────────────────────────
     # KOTAK KANAN BAWAH: Estimasi Harga Buyback Antam
     # ────────────────────────────────────────────────────────
-    box3_x1, box3_y1 = 540, 220
-    box3_x2, box3_y2 = 1056, 340
+    box3_x1, box3_y1 = 540, 250
+    box3_x2, box3_y2 = 1056, 370
 
     # Label
     label3   = "Estimasi Harga Buyback Antam"
