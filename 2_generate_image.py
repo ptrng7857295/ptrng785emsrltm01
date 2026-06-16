@@ -130,7 +130,7 @@ def generate_image(data: dict) -> str:
     label1 = "Estimasi Kenaikan Harga" if change_idr >= 0 else "Estimasi Penurunan Harga"
     label1_w = draw.textlength(label1, font=font_xs)
     draw.text(((box1_x1 + box1_x2) // 2 - label1_w // 2, box1_y1 + 10),
-              label1, font=font_xs, fill=COLOR_GRAY)
+              label1, font=font_xs, fill=COLOR_WHITE)
 
     # Angka besar di tengah kotak
     sign_idr = "+" if change_idr >= 0 else "-"
@@ -151,7 +151,7 @@ def generate_image(data: dict) -> str:
     label2   = "Estimasi Harga Jual Antam"
     label2_w = draw.textlength(label2, font=font_xs)
     draw.text(((box2_x1 + box2_x2) // 2 - label2_w // 2, box2_y1 + 10),
-              label2, font=font_xs, fill=COLOR_GRAY)
+              label2, font=font_xs, fill=COLOR_WHITE)
 
     # Nilai
     jual_text = fmt_rp(antam_jual) + "/gr"
@@ -169,7 +169,7 @@ def generate_image(data: dict) -> str:
     label3   = "Estimasi Harga Buyback Antam"
     label3_w = draw.textlength(label3, font=font_xs)
     draw.text(((box3_x1 + box3_x2) // 2 - label3_w // 2, box3_y1 + 10),
-              label3, font=font_xs, fill=COLOR_GRAY)
+              label3, font=font_xs, fill=COLOR_WHITE)
 
     # Nilai
     bb_text = fmt_rp(antam_buyback) + "/gr"
