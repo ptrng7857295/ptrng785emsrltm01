@@ -149,7 +149,7 @@ def generate_image(data: dict) -> str:
     draw.text((24, y4), kurs_text, font=font_xs, fill=COLOR_GRAY)
 
     # Watermark akun
-    wm_text = "@emasrealtime"
+    wm_text = "www.brankasemas.com"
     wm_w    = draw.textlength(wm_text, font=font_xs)
     draw.text((W - wm_w - 24, y4), wm_text, font=font_xs, fill=(80, 80, 90))
 
