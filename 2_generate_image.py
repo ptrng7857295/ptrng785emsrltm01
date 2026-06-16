@@ -82,7 +82,7 @@ def generate_image(data: dict) -> str:
     font_md1 = load_font(FONT_PATH_BOLD,    38)
     font_sm = load_font(FONT_PATH_REGULAR,  26)
     font_xs = load_font(FONT_PATH_REGULAR,  22)
-    font_xs1 = load_font(FONT_PATH_REGULAR, 26)
+    font_xs1 = load_font(FONT_PATH_REGULAR, 30)
 
     
     # ── Data ──────────────────────────────────────────────────
