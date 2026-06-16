@@ -1,6 +1,6 @@
 import requests
 import json
-import yfinance as yf
+import os
 from datetime import datetime, timezone, timedelta
 
 WIB = timezone(timedelta(hours=7))
@@ -10,22 +10,61 @@ from config import (
     ANTAM_JUAL_MARKUP, ANTAM_BUYBACK_MARKUP
 )
 
+TWELVEDATA_API_KEY = os.getenv("TWELVEDATA_API_KEY", "")
+TROY_OZ_TO_GRAM   = 31.1035
+
 
 def fetch_xauusd() -> tuple[float, float]:
     """
-    Ambil harga XAUUSD dan prev_close dari Yahoo Finance (GC=F = Gold Futures).
-    Tidak perlu API key.
+    Ambil harga XAUUSD dan prev_close dari TwelveData.
     Returns: (harga_sekarang, prev_close)
     """
     try:
+        # Harga terkini
+        res = requests.get(
+            "https://api.twelvedata.com/price",
+            params={
+                "symbol" : "XAU/USD",
+                "apikey" : TWELVEDATA_API_KEY
+            },
+            timeout=10
+        )
+        res.raise_for_status()
+        price = float(res.json().get("price", 0))
+
+        # Prev close dari endpoint quote
+        res2 = requests.get(
+            "https://api.twelvedata.com/quote",
+            params={
+                "symbol" : "XAU/USD",
+                "apikey" : TWELVEDATA_API_KEY
+            },
+            timeout=10
+        )
+        res2.raise_for_status()
+        prev_close = float(res2.json().get("previous_close", price))
+
+        print(f"[fetch] XAUUSD: ${price:,.2f} | Prev Close: ${prev_close:,.2f}")
+        return price, prev_close
+
+    except Exception as e:
+        print(f"[fetch] ERROR ambil XAUUSD dari TwelveData: {e}")
+        # Fallback ke yfinance jika TwelveData gagal
+        return fetch_xauusd_fallback()
+
+
+def fetch_xauusd_fallback() -> tuple[float, float]:
+    """Fallback: ambil dari yfinance jika TwelveData gagal"""
+    try:
+        import yfinance as yf
         ticker     = yf.Ticker("GC=F")
         info       = ticker.fast_info
         price      = float(info["last_price"])
         prev_close = float(info["previous_close"])
-        print(f"[fetch] XAUUSD: ${price:,.2f} | Prev Close: ${prev_close:,.2f}")
+        print(f"[fetch] FALLBACK yfinance XAUUSD: ${price:,.2f}")
         return price, prev_close
     except Exception as e:
-        print(f"[fetch] ERROR ambil XAUUSD: {e}")
+        print(f"[fetch] ERROR fallback yfinance: {e}")
         return 0.0, 0.0
 
 
@@ -61,9 +100,6 @@ def get_price_data() -> dict:
 
     xauusd_oz, prev_close = fetch_xauusd()
     usd_idr               = fetch_usd_idr()
-
-    # 1 troy ounce = 31.1035 gram
-    TROY_OZ_TO_GRAM = 31.1035
 
     xauusd_gram  = xauusd_oz / TROY_OZ_TO_GRAM if xauusd_oz else 0
     idr_per_gram = xauusd_gram * usd_idr
