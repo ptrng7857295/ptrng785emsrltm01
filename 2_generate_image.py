@@ -79,7 +79,7 @@ def generate_image(data: dict) -> str:
     font_xl = load_font(FONT_PATH_BOLD,    130)
     font_lg = load_font(FONT_PATH_BOLD,     70)
     font_md = load_font(FONT_PATH_BOLD,     34)
-    font_md1 = load_font(FONT_PATH_BOLD,    46)
+    font_md1 = load_font(FONT_PATH_BOLD,    44)
     font_sm = load_font(FONT_PATH_REGULAR,  26)
     font_xs = load_font(FONT_PATH_REGULAR,  22)
 
@@ -145,7 +145,7 @@ def generate_image(data: dict) -> str:
     # KOTAK KIRI BAWAH: Estimasi Harga Jual Antam
     # ────────────────────────────────────────────────────────
     box2_x1, box2_y1 = 24,  250
-    box2_x2, box2_y2 = 516, 370
+    box2_x2, box2_y2 = 516, 360
 
     # Label
     label2   = "Estimasi Harga Jual Antam"
@@ -163,7 +163,7 @@ def generate_image(data: dict) -> str:
     # KOTAK KANAN BAWAH: Estimasi Harga Buyback Antam
     # ────────────────────────────────────────────────────────
     box3_x1, box3_y1 = 540, 250
-    box3_x2, box3_y2 = 1056, 370
+    box3_x2, box3_y2 = 1056, 360
 
     # Label
     label3   = "Estimasi Harga Buyback Antam"
