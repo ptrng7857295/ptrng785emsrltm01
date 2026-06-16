@@ -47,116 +47,112 @@ def generate_image(data: dict) -> str:
     Generate gambar harga emas realtime mirip @emasrealtime.
     
     Layout:
+
+
     ┌─────────────────────────────────────────────────────────┐
-    │  $4.072,43  -3.64% ▼   IDR 2.375.201/gr      [logo]   │
+    │  $4,341.14  +0.75% ▲              IDR 2.471.332/gr      │  ← row 1 (tetap)
     │                                                          │
-    │              IDR -93.693                                 │
+    │         ┌──────────────────────────────┐                 │
+    │         │     IDR +18.490              │  ← kotak tengah │
+    │         └──────────────────────────────┘                 │
     │                                                          │
-    │   Proyeksi Antam → Rp 2.619.000/gr                      │
-    │   Buyback → Rp 2.393.000/gr       [timestamp]           │
+    │  ┌───────────────────┐  ┌───────────────────────────┐   │
+    │  │  Rp 2.718.816/gr  │  │  Buyback: Rp 2.286.277/gr │   │  ← 2 kotak bawah
+    │  └───────────────────┘  └───────────────────────────┘   │
+    │                                                          │
+    │  KURS: Rp 17.707  |  16 Jun 2026 16:00 WIB  @brankasemas│  ← row bawah (tetap)
     └─────────────────────────────────────────────────────────┘
+
     """
 
     # ── Buat canvas ───────────────────────────────────────────
-    if os.path.exists(TEMPLATE_PATH):
-        img = Image.open(TEMPLATE_PATH).convert("RGB")
-        img = img.resize((IMAGE_WIDTH, IMAGE_HEIGHT))
-    else:
-        img = Image.new("RGB", (IMAGE_WIDTH, IMAGE_HEIGHT), color=COLOR_BG)
-    
-    draw = ImageDraw.Draw(img)
-
-    # ── Load fonts ────────────────────────────────────────────
-    font_xl     = load_font(FONT_PATH_BOLD,    130)  # angka besar IDR change
-    font_lg     = load_font(FONT_PATH_BOLD,     46)  # harga IDR/gram
-    font_md     = load_font(FONT_PATH_BOLD,     34)  # USD price
-    font_sm     = load_font(FONT_PATH_REGULAR,  26)  # label kecil
-    font_xs     = load_font(FONT_PATH_REGULAR,  22)  # timestamp, watermark
-
-    W = IMAGE_WIDTH
-    H = IMAGE_HEIGHT
-
-    # ── Data ──────────────────────────────────────────────────
-    xauusd_oz    = data.get("xauusd_oz", 0)
-    idr_per_gram = data.get("idr_per_gram", 0)
-    antam_jual   = data.get("antam_jual", 0)
-    antam_buyback= data.get("antam_buyback", 0)
-    change_pct   = data.get("change_pct", 0)
-    change_idr   = data.get("change_idr", 0)
-    usd_idr      = data.get("usd_idr", 0)
-    timestamp    = data.get("timestamp", "")
-
-    is_up = change_pct >= 0
-    color_change = COLOR_GREEN if is_up else COLOR_RED
-    arrow = "▲" if is_up else "▼"
+# ── Ukuran canvas ─────────────────────────────────────
+    W = IMAGE_WIDTH   # 1080
+    H = IMAGE_HEIGHT  # 400
 
     # ────────────────────────────────────────────────────────
-    # ROW 1: Harga USD | Persen | IDR per gram
+    # ROW 1: Harga USD | Persen | IDR per gram (atas)
     # ────────────────────────────────────────────────────────
-    y1 = 28
+    y1 = 20
 
-    # Harga USD (format internasional: $4,072.43)
     usd_text = fmt_usd(xauusd_oz)
     draw.text((24, y1), usd_text, font=font_md, fill=COLOR_WHITE)
 
-    # Persentase + arrow
     pct_text = f"  {fmt_pct(change_pct)} {arrow}"
     usd_w = draw.textlength(usd_text, font=font_md)
     draw.text((24 + usd_w, y1 + 4), pct_text, font=font_sm, fill=color_change)
 
-    # IDR per gram (kanan tengah) — format: IDR 2.375.201/gr
     idr_gram_text = fmt_idr(idr_per_gram) + "/gr"
     idr_gram_w    = draw.textlength(idr_gram_text, font=font_md)
     draw.text((W - idr_gram_w - 24, y1), idr_gram_text, font=font_md, fill=COLOR_WHITE)
 
     # ────────────────────────────────────────────────────────
-    # ROW 2: ANGKA BESAR — Perubahan IDR (tengah)
+    # KOTAK TENGAH: Estimasi Kenaikan/Penurunan
+    # Posisi: tengah horizontal, 1/3 dari atas
     # ────────────────────────────────────────────────────────
+    box1_x1, box1_y1 = 220, 60
+    box1_x2, box1_y2 = 860, 210
+
+    # Label kecil di atas kotak
+    label1 = "Estimasi Kenaikan Harga" if change_idr >= 0 else "Estimasi Penurunan Harga"
+    label1_w = draw.textlength(label1, font=font_xs)
+    draw.text(((box1_x1 + box1_x2) // 2 - label1_w // 2, box1_y1 + 10),
+              label1, font=font_xs, fill=COLOR_GRAY)
+
+    # Angka besar di tengah kotak
     sign_idr = "+" if change_idr >= 0 else "-"
     big_text = f"IDR {sign_idr}{abs(change_idr):,.0f}".replace(",", ".")
     big_w    = draw.textlength(big_text, font=font_xl)
-    big_x    = (W - big_w) // 2
-    big_y    = H // 2 - 80
-
-    # Shadow tipis supaya terbaca di atas chart
-    draw.text((big_x + 3, big_y + 3), big_text, font=font_xl, fill=(0, 0, 0, 128))
+    big_x    = (box1_x1 + box1_x2) // 2 - big_w // 2
+    big_y    = box1_y1 + 42
+    draw.text((big_x + 2, big_y + 2), big_text, font=font_xl, fill=(0, 0, 0))
     draw.text((big_x, big_y), big_text, font=font_xl, fill=color_change)
 
     # ────────────────────────────────────────────────────────
-    # ROW 3: Proyeksi & Buyback Antam (bawah)
+    # KOTAK KIRI BAWAH: Estimasi Harga Jual Antam
     # ────────────────────────────────────────────────────────
-    y3 = H - 72
+    box2_x1, box2_y1 = 24,  220
+    box2_x2, box2_y2 = 516, 340
 
-    # Separator line
-    draw.line([(24, y3 - 14), (W - 24, y3 - 14)], fill=(50, 50, 60), width=1)
+    # Label
+    label2   = "Estimasi Harga Jual Antam"
+    label2_w = draw.textlength(label2, font=font_xs)
+    draw.text(((box2_x1 + box2_x2) // 2 - label2_w // 2, box2_y1 + 10),
+              label2, font=font_xs, fill=COLOR_GRAY)
 
-    # Proyeksi Antam — format: antam → Rp 2.619.000/gr
-    proj_label = "Proyeksi "
-    proj_val   = f"antam → {fmt_rp(antam_jual)}/gr"
-    draw.text((24, y3), proj_label, font=font_sm, fill=COLOR_GRAY)
-    proj_lw = draw.textlength(proj_label, font=font_sm)
-    draw.text((24 + proj_lw, y3), proj_val, font=font_sm, fill=COLOR_YELLOW)
-
-    # Buyback Antam (kanan) — format: Buyback: Rp 2.393.000/gr
-    bb_label = "Buyback: "
-    bb_val   = f"{fmt_rp(antam_buyback)}/gr"
-    bb_full  = bb_label + bb_val
-    bb_w     = draw.textlength(bb_full, font=font_sm)
-    draw.text((W - bb_w - 24, y3), bb_label, font=font_sm, fill=COLOR_GRAY)
-    draw.text((W - bb_w - 24 + draw.textlength(bb_label, font=font_sm), y3),
-              bb_val, font=font_sm, fill=COLOR_ACCENT)
-    
+    # Nilai
+    jual_text = fmt_rp(antam_jual) + "/gr"
+    jual_w    = draw.textlength(jual_text, font=font_lg)
+    draw.text(((box2_x1 + box2_x2) // 2 - jual_w // 2, box2_y1 + 42),
+              jual_text, font=font_lg, fill=COLOR_YELLOW)
 
     # ────────────────────────────────────────────────────────
-    # ROW 4: Kurs + Timestamp (paling bawah)
+    # KOTAK KANAN BAWAH: Estimasi Harga Buyback Antam
+    # ────────────────────────────────────────────────────────
+    box3_x1, box3_y1 = 540, 220
+    box3_x2, box3_y2 = 1056, 340
+
+    # Label
+    label3   = "Estimasi Harga Buyback Antam"
+    label3_w = draw.textlength(label3, font=font_xs)
+    draw.text(((box3_x1 + box3_x2) // 2 - label3_w // 2, box3_y1 + 10),
+              label3, font=font_xs, fill=COLOR_GRAY)
+
+    # Nilai
+    bb_text = fmt_rp(antam_buyback) + "/gr"
+    bb_w    = draw.textlength(bb_text, font=font_lg)
+    draw.text(((box3_x1 + box3_x2) // 2 - bb_w // 2, box3_y1 + 42),
+              bb_text, font=font_lg, fill=COLOR_ACCENT)
+
+    # ────────────────────────────────────────────────────────
+    # ROW BAWAH: Kurs + Timestamp + Watermark
     # ────────────────────────────────────────────────────────
     y4 = H - 36
 
     kurs_text = f"KURS: {fmt_rp(usd_idr)}  |  {timestamp}"
     draw.text((24, y4), kurs_text, font=font_xs, fill=COLOR_GRAY)
 
-    # Watermark akun
-    wm_text = "www.brankasemas.com"
+    wm_text = "@brankasemas.idn"
     wm_w    = draw.textlength(wm_text, font=font_xs)
     draw.text((W - wm_w - 24, y4), wm_text, font=font_xs, fill=(80, 80, 90))
 
@@ -165,7 +161,6 @@ def generate_image(data: dict) -> str:
     img.save(OUTPUT_PATH, "PNG", quality=95)
     print(f"[image] Gambar disimpan: {OUTPUT_PATH}")
     return OUTPUT_PATH
-
 
 # ─── TEST LANGSUNG ──────────────────────────────────────────
 if __name__ == "__main__":
