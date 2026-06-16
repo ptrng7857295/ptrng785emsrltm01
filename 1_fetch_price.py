@@ -20,7 +20,7 @@ def fetch_xauusd() -> tuple[float, float]:
     Returns: (harga_sekarang, prev_close)
     """
     try:
-        ticker     = yf.Ticker("GC=F")
+        ticker     = yf.Ticker("XAUUSD=X")  # Gold Spot
         info       = ticker.fast_info
         price      = float(info["last_price"])
         prev_close = float(info["previous_close"])
