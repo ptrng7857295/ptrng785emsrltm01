@@ -137,7 +137,15 @@ def generate_image(data: dict) -> str:
     proj_lw = draw.textlength(proj_label, font=font_sm)
     draw.text((24 + proj_lw, y3), proj_val, font=font_sm, fill=COLOR_YELLOW)
 
-
+    # Buyback Antam (kanan) — format: Buyback: Rp 2.393.000/gr
+    bb_label = "Buyback: "
+    bb_val   = f"{fmt_rp(antam_buyback)}/gr"
+    bb_full  = bb_label + bb_val
+    bb_w     = draw.textlength(bb_full, font=font_sm)
+    draw.text((W - bb_w - 24, y3), bb_label, font=font_sm, fill=COLOR_GRAY)
+    draw.text((W - bb_w - 24 + draw.textlength(bb_label, font=font_sm), y3),
+              bb_val, font=font_sm, fill=COLOR_ACCENT)
+    
 
     # ────────────────────────────────────────────────────────
     # ROW 4: Kurs + Timestamp (paling bawah)
