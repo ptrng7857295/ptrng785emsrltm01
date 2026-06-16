@@ -79,7 +79,7 @@ def generate_image(data: dict) -> str:
     font_xl = load_font(FONT_PATH_BOLD,    130)
     font_lg = load_font(FONT_PATH_BOLD,     70)
     font_md = load_font(FONT_PATH_BOLD,     34)
-    font_md1 = load_font(FONT_PATH_BOLD,    44)
+    font_md1 = load_font(FONT_PATH_BOLD,    40)
     font_sm = load_font(FONT_PATH_REGULAR,  26)
     font_xs = load_font(FONT_PATH_REGULAR,  22)
 
