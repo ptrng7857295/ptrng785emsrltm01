@@ -25,6 +25,9 @@ post_to_threads = post_mod.post_to_threads
 
 
 def run(dry_run: bool = False):
+    import time
+    print(f"[main] Menunggu 2 menit sebelum fetch...")
+    time.sleep(120)  # tunggu 2 menit = 120 detik
     print(f"\n{'='*50}")
     print(f"  EMASREALTIME — {datetime.now().strftime('%d %b %Y %H:%M:%S')}")
     print(f"{'='*50}")
