@@ -65,7 +65,23 @@ def generate_image(data: dict) -> str:
 
     """
 
+    
     # ── Buat canvas ───────────────────────────────────────────
+    if os.path.exists(TEMPLATE_PATH):
+        img = Image.open(TEMPLATE_PATH).convert("RGB")
+        img = img.resize((IMAGE_WIDTH, IMAGE_HEIGHT), Image.LANCZOS)
+    else:
+        img = Image.new("RGB", (IMAGE_WIDTH, IMAGE_HEIGHT), color=COLOR_BG)
+
+    draw = ImageDraw.Draw(img)
+
+    # ── Load fonts ────────────────────────────────────────────
+    font_xl = load_font(FONT_PATH_BOLD,    130)
+    font_lg = load_font(FONT_PATH_BOLD,     46)
+    font_md = load_font(FONT_PATH_BOLD,     34)
+    font_sm = load_font(FONT_PATH_REGULAR,  26)
+    font_xs = load_font(FONT_PATH_REGULAR,  22)
+
     
     # ── Data ──────────────────────────────────────────────────
     xauusd_oz     = data.get("xauusd_oz", 0)
