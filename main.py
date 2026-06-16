@@ -13,9 +13,15 @@ import sys
 import traceback
 from datetime import datetime
 
-from fetch_price    import get_price_data
-from generate_image import generate_image
-from post_threads   import post_to_threads
+import importlib
+
+fetch_mod    = importlib.import_module("1_fetch_price")
+generate_mod = importlib.import_module("2_generate_image")
+post_mod     = importlib.import_module("3_post_threads")
+
+get_price_data  = fetch_mod.get_price_data
+generate_image  = generate_mod.generate_image
+post_to_threads = post_mod.post_to_threads
 
 
 def run(dry_run: bool = False):
