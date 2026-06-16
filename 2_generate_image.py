@@ -57,11 +57,11 @@ def generate_image(data: dict) -> str:
     """
 
     # ── Buat canvas ───────────────────────────────────────────
-if os.path.exists(TEMPLATE_PATH):
-    img = Image.open(TEMPLATE_PATH).convert("RGB")
-    img = img.resize((IMAGE_WIDTH, IMAGE_HEIGHT))
-else:
-    img = Image.new("RGB", (IMAGE_WIDTH, IMAGE_HEIGHT), color=COLOR_BG)
+    if os.path.exists(TEMPLATE_PATH):
+        img = Image.open(TEMPLATE_PATH).convert("RGB")
+        img = img.resize((IMAGE_WIDTH, IMAGE_HEIGHT))
+    else:
+        img = Image.new("RGB", (IMAGE_WIDTH, IMAGE_HEIGHT), color=COLOR_BG)
     
     draw = ImageDraw.Draw(img)
 
