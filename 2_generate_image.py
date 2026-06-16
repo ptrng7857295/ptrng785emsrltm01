@@ -156,7 +156,7 @@ def generate_image(data: dict) -> str:
     jual_text = fmt_rp(antam_jual) + "/gr"
     jual_w    = draw.textlength(jual_text, font=font_md)
     draw.text(((box2_x1 + box2_x2) // 2 - jual_w // 2, box2_y1 + 42),
-              jual_text, font=font_lg, fill=COLOR_YELLOW)
+              jual_text, font=font_md, fill=COLOR_YELLOW)
 
     # ────────────────────────────────────────────────────────
     # KOTAK KANAN BAWAH: Estimasi Harga Buyback Antam
@@ -174,7 +174,7 @@ def generate_image(data: dict) -> str:
     bb_text = fmt_rp(antam_buyback) + "/gr"
     bb_w    = draw.textlength(bb_text, font=font_md)
     draw.text(((box3_x1 + box3_x2) // 2 - bb_w // 2, box3_y1 + 42),
-              bb_text, font=font_lg, fill=COLOR_ACCENT)
+              bb_text, font=font_md, fill=COLOR_ACCENT)
 
     # ────────────────────────────────────────────────────────
     # ROW BAWAH: Kurs + Timestamp + Watermark
