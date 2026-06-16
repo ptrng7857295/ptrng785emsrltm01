@@ -11,7 +11,7 @@ from config import (
 )
 
 TROY_OZ_TO_GRAM    = 31.1035
-FUTURES_SPOT_DIFF  = 15.0  # Koreksi selisih Futures vs Spot
+FUTURES_SPOT_DIFF  = 17.0  # Koreksi selisih Futures vs Spot
 
 
 def fetch_xauusd() -> tuple[float, float]:
