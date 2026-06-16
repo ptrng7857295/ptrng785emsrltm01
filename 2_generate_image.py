@@ -123,8 +123,8 @@ def generate_image(data: dict) -> str:
     # KOTAK TENGAH: Estimasi Kenaikan/Penurunan
     # Posisi: tengah horizontal, 1/3 dari atas
     # ────────────────────────────────────────────────────────
-    box1_x1, box1_y1 = 220, 70
-    box1_x2, box1_y2 = 860, 210
+    box1_x1, box1_y1 = 220, 90
+    box1_x2, box1_y2 = 860, 230
 
     # Label kecil di atas kotak
     label1 = "Estimasi Kenaikan Harga" if change_idr >= 0 else "Estimasi Penurunan Harga"
