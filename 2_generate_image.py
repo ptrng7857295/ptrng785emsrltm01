@@ -132,7 +132,6 @@ def generate_image(data: dict) -> str:
     draw.text((24 + proj_lw, y3), proj_val, font=font_sm, fill=COLOR_YELLOW)
 
     # Buyback Antam (kanan) — format: Buyback: Rp 2.393.000/gr
-    bb_label = "Buyback: "
     bb_val   = f"{fmt_rp(antam_buyback)}/gr"
     bb_full  = bb_label + bb_val
     bb_w     = draw.textlength(bb_full, font=font_sm)
