@@ -1,6 +1,6 @@
 import requests
 import json
-import os
+import yfinance as yf
 from datetime import datetime, timezone, timedelta
 
 WIB = timezone(timedelta(hours=7))
@@ -10,63 +10,34 @@ from config import (
     ANTAM_JUAL_MARKUP, ANTAM_BUYBACK_MARKUP
 )
 
-TWELVEDATA_API_KEY = os.getenv("TWELVEDATA_API_KEY", "")
-TROY_OZ_TO_GRAM   = 31.1035
+TROY_OZ_TO_GRAM = 31.1035
 
 
 def fetch_xauusd() -> tuple[float, float]:
     """
-    Ambil harga XAUUSD dan prev_close dari TwelveData.
+    Ambil harga XAUUSD realtime dari Yahoo Finance (GC=F = Gold Futures).
+    Menggunakan fast_info["last_price"] untuk harga realtime.
     Returns: (harga_sekarang, prev_close)
     """
     try:
-        # Harga terkini
-        res = requests.get(
-            "https://api.twelvedata.com/price",
-            params={
-                "symbol" : "XAU/USD",
-                "apikey" : TWELVEDATA_API_KEY
-            },
-            timeout=10
-        )
-        res.raise_for_status()
-        price = float(res.json().get("price", 0))
-
-        # Prev close dari endpoint quote
-        res2 = requests.get(
-            "https://api.twelvedata.com/quote",
-            params={
-                "symbol" : "XAU/USD",
-                "apikey" : TWELVEDATA_API_KEY
-            },
-            timeout=10
-        )
-        res2.raise_for_status()
-        prev_close = float(res2.json().get("previous_close", price))
-
-        print(f"[fetch] XAUUSD: ${price:,.2f} | Prev Close: ${prev_close:,.2f}")
-        return price, prev_close
-
-    except Exception as e:
-        print(f"[fetch] ERROR ambil XAUUSD dari TwelveData: {e}")
-        # Fallback ke yfinance jika TwelveData gagal
-        return fetch_xauusd_fallback()
-
-
-def fetch_xauusd_fallback() -> tuple[float, float]:
-    """Fallback: ambil dari yfinance jika TwelveData gagal"""
-    try:
-        import yfinance as yf
         ticker     = yf.Ticker("GC=F")
         info       = ticker.fast_info
-        hist       = ticker.history(period="2d", interval="1d")
-        price      = float(hist["Close"].iloc[-1])
-        prev_close = float(hist["Close"].iloc[-2])
-        print(f"[fetch] FALLBACK yfinance XAUUSD: ${price:,.2f}")
+        price      = float(info["last_price"])
+        prev_close = float(info["previous_close"])
+        print(f"[fetch] XAUUSD: ${price:,.2f} | Prev Close: ${prev_close:,.2f}")
         return price, prev_close
     except Exception as e:
-        print(f"[fetch] ERROR fallback yfinance: {e}")
-        return 0.0, 0.0
+        print(f"[fetch] ERROR ambil XAUUSD: {e}")
+        # Fallback ke history jika fast_info gagal
+        try:
+            hist       = ticker.history(period="2d", interval="1d")
+            price      = float(hist["Close"].iloc[-1])
+            prev_close = float(hist["Close"].iloc[-2])
+            print(f"[fetch] FALLBACK history XAUUSD: ${price:,.2f}")
+            return price, prev_close
+        except Exception as e2:
+            print(f"[fetch] ERROR fallback history: {e2}")
+            return 0.0, 0.0
 
 
 def fetch_usd_idr() -> float:
