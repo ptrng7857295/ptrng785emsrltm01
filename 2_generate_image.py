@@ -82,6 +82,7 @@ def generate_image(data: dict) -> str:
     font_md1 = load_font(FONT_PATH_BOLD,    38)
     font_sm = load_font(FONT_PATH_REGULAR,  26)
     font_xs = load_font(FONT_PATH_REGULAR,  22)
+    font_xs1 = load_font(FONT_PATH_REGULAR, 26)
 
     
     # ── Data ──────────────────────────────────────────────────
@@ -128,9 +129,9 @@ def generate_image(data: dict) -> str:
 
     # Label kecil di atas kotak
     label1 = "Estimasi Kenaikan Harga" if change_idr >= 0 else "Estimasi Penurunan Harga"
-    label1_w = draw.textlength(label1, font=font_xs)
+    label1_w = draw.textlength(label1, font=font_xs1)
     draw.text(((box1_x1 + box1_x2) // 2 - label1_w // 2, box1_y1 + 10),
-              label1, font=font_xs, fill=COLOR_WHITE)
+              label1, font=font_xs1, fill=COLOR_WHITE)
 
     # Angka besar di tengah kotak
     sign_idr = "+" if change_idr >= 0 else "-"
