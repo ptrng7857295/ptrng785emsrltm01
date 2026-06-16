@@ -10,29 +10,31 @@ from config import (
     ANTAM_JUAL_MARKUP, ANTAM_BUYBACK_MARKUP
 )
 
-TROY_OZ_TO_GRAM = 31.1035
+TROY_OZ_TO_GRAM    = 31.1035
+FUTURES_SPOT_DIFF  = 15.0  # Koreksi selisih Futures vs Spot
 
 
 def fetch_xauusd() -> tuple[float, float]:
     """
     Ambil harga XAUUSD realtime dari Yahoo Finance (GC=F = Gold Futures).
-    Menggunakan fast_info["last_price"] untuk harga realtime.
+    Dikurangi FUTURES_SPOT_DIFF untuk mendekati harga spot TradingView.
     Returns: (harga_sekarang, prev_close)
     """
     try:
-        ticker     = yf.Ticker("XAUUSD=X")  # Gold Spot
+        ticker     = yf.Ticker("GC=F")
         info       = ticker.fast_info
-        price      = float(info["last_price"])
-        prev_close = float(info["previous_close"])
+        price      = float(info["last_price"])      - FUTURES_SPOT_DIFF
+        prev_close = float(info["previous_close"])  - FUTURES_SPOT_DIFF
         print(f"[fetch] XAUUSD: ${price:,.2f} | Prev Close: ${prev_close:,.2f}")
         return price, prev_close
     except Exception as e:
         print(f"[fetch] ERROR ambil XAUUSD: {e}")
         # Fallback ke history jika fast_info gagal
         try:
+            ticker     = yf.Ticker("GC=F")
             hist       = ticker.history(period="2d", interval="1d")
-            price      = float(hist["Close"].iloc[-1])
-            prev_close = float(hist["Close"].iloc[-2])
+            price      = float(hist["Close"].iloc[-1])     - FUTURES_SPOT_DIFF
+            prev_close = float(hist["Close"].iloc[-2])     - FUTURES_SPOT_DIFF
             print(f"[fetch] FALLBACK history XAUUSD: ${price:,.2f}")
             return price, prev_close
         except Exception as e2:
