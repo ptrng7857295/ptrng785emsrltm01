@@ -78,7 +78,8 @@ def generate_image(data: dict) -> str:
     # ── Load fonts ────────────────────────────────────────────
     font_xl = load_font(FONT_PATH_BOLD,    130)
     font_lg = load_font(FONT_PATH_BOLD,     70)
-    font_md = load_font(FONT_PATH_BOLD,     46)
+    font_md = load_font(FONT_PATH_BOLD,     34)
+    font_md1 = load_font(FONT_PATH_BOLD,    46)
     font_sm = load_font(FONT_PATH_REGULAR,  26)
     font_xs = load_font(FONT_PATH_REGULAR,  22)
 
@@ -154,9 +155,9 @@ def generate_image(data: dict) -> str:
 
     # Nilai
     jual_text = fmt_rp(antam_jual) + "/gr"
-    jual_w    = draw.textlength(jual_text, font=font_md)
+    jual_w    = draw.textlength(jual_text, font=font_md1)
     draw.text(((box2_x1 + box2_x2) // 2 - jual_w // 2, box2_y1 + 42),
-              jual_text, font=font_md, fill=COLOR_YELLOW)
+              jual_text, font=font_md1, fill=COLOR_YELLOW)
 
     # ────────────────────────────────────────────────────────
     # KOTAK KANAN BAWAH: Estimasi Harga Buyback Antam
@@ -172,9 +173,9 @@ def generate_image(data: dict) -> str:
 
     # Nilai
     bb_text = fmt_rp(antam_buyback) + "/gr"
-    bb_w    = draw.textlength(bb_text, font=font_md)
+    bb_w    = draw.textlength(bb_text, font=font_md1)
     draw.text(((box3_x1 + box3_x2) // 2 - bb_w // 2, box3_y1 + 42),
-              bb_text, font=font_md, fill=COLOR_ACCENT)
+              bb_text, font=font_md1, fill=COLOR_ACCENT)
 
     # ────────────────────────────────────────────────────────
     # ROW BAWAH: Kurs + Timestamp + Watermark
