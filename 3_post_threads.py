@@ -5,6 +5,23 @@ from config import THREADS_USER_ID, THREADS_ACCESS_TOKEN, OUTPUT_PATH
 
 BASE_URL = "https://graph.threads.net/v1.0"
 
+import random
+
+HASHTAG_LIST = [
+    "#emasrealtime",
+    "#hargaemas",
+    "#investasiemas",
+    "#antam",
+    "#gold",
+    "#xauusd",
+    "#hargaantam",
+    "#emashari ini",
+    "#investasiemas",
+    "#goldprice",
+    "#emaslogam",
+    "#brankasemas",
+]
+
 
 def fmt_idr_caption(value: float, prefix: str = "Rp ") -> str:
     """Format angka IDR untuk caption: titik sebagai pemisah ribuan"""
@@ -32,7 +49,7 @@ def build_caption(data: dict) -> str:
         f"💰 Harga Spot   : {fmt_idr_caption(idr_per_gram)}/gr\n"
         f"🛒 Antam Jual   : {fmt_idr_caption(antam_jual)}/gr\n"
         f"💱 Kurs USD/IDR : {fmt_idr_caption(usd_idr)}\n\n"
-        f"#emasrealtime #hargaemas #investasiemas #antam #gold #xauusd"
+        f"{random.choice(HASHTAG_LIST)}"
     )
 
     return caption
