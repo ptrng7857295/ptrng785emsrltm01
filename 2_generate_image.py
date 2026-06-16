@@ -128,7 +128,7 @@ def generate_image(data: dict) -> str:
     box1_x2, box1_y2 = 860, 230
 
     # Label kecil di atas kotak
-    label1 = "Estimasi Kenaikan Harga" if change_idr >= 0 else "Estimasi Penurunan Harga"
+    label1 = "⚡ Estimasi Kenaikan Harga ⚡" if change_idr >= 0 else "⚡ Estimasi Penurunan Harga ⚡"
     label1_w = draw.textlength(label1, font=font_xs1)
     draw.text(((box1_x1 + box1_x2) // 2 - label1_w // 2, box1_y1 + 10),
               label1, font=font_xs1, fill=COLOR_WHITE)
