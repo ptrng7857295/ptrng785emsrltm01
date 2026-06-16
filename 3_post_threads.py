@@ -8,17 +8,13 @@ BASE_URL = "https://graph.threads.net/v1.0"
 import random
 
 HASHTAG_LIST = [
-    "#emasrealtime",
     "#hargaemas",
-    "#investasiemas",
+    "#Antamlogammulia",
     "#antam",
-    "#gold",
-    "#xauusd",
     "#hargaantam",
-    "#emashari ini",
+    "#hargaemashariini",
     "#investasiemas",
-    "#goldprice",
-    "#emaslogam",
+    "#beliemas",
     "#brankasemas",
 ]
 
