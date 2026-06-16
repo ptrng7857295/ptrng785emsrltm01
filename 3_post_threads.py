@@ -43,7 +43,7 @@ def build_caption(data: dict) -> str:
         f"🏅 UPDATE HARGA EMAS — {timestamp}\n\n"
         f"{arah} {sign_pct}{change_pct:.2f}%\n"
         f"Perubahan: IDR {sign_idr}{fmt_idr_caption(change_idr, prefix='')}/gr\n\n"
-        f"💰 Harga Spot     : {fmt_idr_caption(idr_per_gram)}/gr\n"
+        f"💰 Harga Emas Dunia : {fmt_idr_caption(idr_per_gram)}/gr\n"
         f"🛒 Estimasi Antam : {fmt_idr_caption(antam_jual)}/gr\n"
         f"💵 Antam Buyback: {fmt_idr_caption(antam_buyback)}/gr\n\n"
         f"💱 Kurs USD/IDR   : {fmt_idr_caption(usd_idr)}\n\n"
