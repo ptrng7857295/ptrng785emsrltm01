@@ -40,7 +40,7 @@ def build_caption(data: dict) -> str:
     sign_pct  = "+" if change_pct >= 0 else ""
 
     caption = (
-        f"🏅 UPDATE HARGA EMAS — {timestamp}\n\n"
+        f"⚡ UPDATE HARGA EMAS ⚡ —/gr\n\n {timestamp}\n\n"
         f"{arah} {sign_pct}{change_pct:.2f}%\n"
         f"Perubahan: IDR {sign_idr}{fmt_idr_caption(change_idr, prefix='')}/gr\n\n"
         f"💰 Harga Emas Dunia : {fmt_idr_caption(idr_per_gram)}/gr\n"
