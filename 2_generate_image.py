@@ -134,11 +134,11 @@ def generate_image(data: dict) -> str:
     # Angka besar di tengah kotak
     sign_idr = "+" if change_idr >= 0 else "-"
     big_text = f"IDR {sign_idr}{abs(change_idr):,.0f}".replace(",", ".")
-    big_w    = draw.textlength(big_text, font=font_xl)
+    big_w    = draw.textlength(big_text, font=font_lg)
     big_x    = (box1_x1 + box1_x2) // 2 - big_w // 2
     big_y    = box1_y1 + 42
-    draw.text((big_x + 2, big_y + 2), big_text, font=font_xl, fill=(0, 0, 0))
-    draw.text((big_x, big_y), big_text, font=font_xl, fill=color_change)
+    draw.text((big_x + 2, big_y + 2), big_text, font=font_lg, fill=(0, 0, 0))
+    draw.text((big_x, big_y), big_text, font=font_lg, fill=color_change)
 
     # ────────────────────────────────────────────────────────
     # KOTAK KIRI BAWAH: Estimasi Harga Jual Antam
