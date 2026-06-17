@@ -62,8 +62,8 @@ def build_caption(data: dict) -> str:
         f"🛒 Estimasi Antam : {fmt_idr_caption(antam_jual)}/gr\n"
         f"💵 Antam Buyback: {fmt_idr_caption(antam_buyback)}/gr\n\n"
         f"💱 Kurs USD/IDR   : {fmt_idr_caption(usd_idr)}\n\n"
-        f"{random.choice(PROMOSI_LIST)}"
-        f"{random.choice(HASHTAG_LIST)}"
+        f"{random.choice(PROMOSI_LIST)}\n"
+        f"{random.choice(HASHTAG_LIST)}\n"
     )
 
     return caption
