@@ -33,7 +33,7 @@ FONT_PATH_BOLD      = "fonts/Inter-Bold.ttf"
 FONT_PATH_REGULAR   = "fonts/Inter-Regular.ttf"
 
 # ─── SCHEDULER ─────────────────────────────────────────────
-INTERVAL_MINUTES    = 15  # Post setiap 15 menit
+INTERVAL_MINUTES    = 10  # Post setiap 15 menit
 
 # ─── WARNA ─────────────────────────────────────────────────
 COLOR_BG            = (13, 17, 23)       # Dark background
