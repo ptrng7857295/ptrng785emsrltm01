@@ -135,7 +135,7 @@ def generate_image(data: dict) -> str:
 
     # Angka besar di tengah kotak
     sign_idr = "+" if change_idr >= 0 else "-"
-    big_text = f"IDR {sign_idr}{abs(change_idr):,.0f}".replace(",", ".")
+    big_text = f"{arrow} IDR {sign_idr}{abs(change_idr):,.0f}".replace(",", ".")
     big_w    = draw.textlength(big_text, font=font_lg)
     big_x    = (box1_x1 + box1_x2) // 2 - big_w // 2
     big_y    = box1_y1 + 42
