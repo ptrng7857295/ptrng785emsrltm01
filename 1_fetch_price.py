@@ -12,6 +12,7 @@ from config import (
 
 TROY_OZ_TO_GRAM    = 31.1035
 FUTURES_SPOT_DIFF  = 17.0  # Koreksi selisih Futures vs Spot
+JAM_ACUAN          = 7     # Jam acuan perbandingan harga (WIB) — ubah cukup di sini
 
 
 def fetch_xauusd() -> tuple[float, float]:
@@ -19,12 +20,12 @@ def fetch_xauusd() -> tuple[float, float]:
     Ambil harga XAUUSD realtime dari Yahoo Finance (GC=F = Gold Futures).
     Dikurangi FUTURES_SPOT_DIFF untuk mendekati harga spot TradingView.
 
-    Acuan perbandingan: SELALU jam 08:00 WIB.
-    - Jam 08:00 - 23:59 WIB → acuan hari ini jam 08:00
-    - Jam 00:00 - 07:59 WIB → acuan KEMARIN jam 08:00
+    Acuan perbandingan: SELALU jam JAM_ACUAN WIB (lihat konstanta di atas).
+    - Jam JAM_ACUAN:00 - 23:59 WIB → acuan hari ini jam JAM_ACUAN:00
+    - Jam 00:00 - (JAM_ACUAN-1):59 WIB → acuan KEMARIN jam JAM_ACUAN:00
 
-    Fallback berlapis jika candle jam 08:00 tidak ditemukan:
-    1. Cari candle jam 08:00 WIB manapun yang paling baru (5 hari ke belakang)
+    Fallback berlapis jika candle jam acuan tidak ditemukan:
+    1. Cari candle jam JAM_ACUAN WIB manapun yang paling baru (5 hari ke belakang)
     2. Pakai candle paling awal yang tersedia di histori
 
     Returns: (harga_sekarang, harga_acuan)
@@ -39,29 +40,29 @@ def fetch_xauusd() -> tuple[float, float]:
 
         now_wib = datetime.now(WIB)
 
-        # Tentukan tanggal acuan — selalu jam 08:00 WIB
-        if now_wib.hour >= 8:
+        # Tentukan tanggal acuan — selalu jam JAM_ACUAN WIB
+        if now_wib.hour >= JAM_ACUAN:
             tanggal_acuan = now_wib.date()
         else:
-            # Jam 00:00 - 07:59 → acuan adalah KEMARIN jam 08:00
+            # Sebelum JAM_ACUAN → acuan adalah KEMARIN jam JAM_ACUAN
             tanggal_acuan = (now_wib - timedelta(days=1)).date()
 
         target = hist[
-            (hist.index.date == tanggal_acuan) & (hist.index.hour == 8)
+            (hist.index.date == tanggal_acuan) & (hist.index.hour == JAM_ACUAN)
         ]
 
         if not target.empty:
             prev_close = float(target["Close"].iloc[0]) - FUTURES_SPOT_DIFF
         else:
-            # Fallback 1: cari candle jam 8 WIB manapun yang paling baru (5 hari ke belakang)
-            candidates = hist[hist.index.hour == 8]
+            # Fallback 1: cari candle jam acuan manapun yang paling baru (5 hari ke belakang)
+            candidates = hist[hist.index.hour == JAM_ACUAN]
             if not candidates.empty:
                 prev_close = float(candidates["Close"].iloc[-1]) - FUTURES_SPOT_DIFF
             else:
                 # Fallback 2: pakai candle paling awal yang tersedia di histori
                 prev_close = float(hist["Close"].iloc[0]) - FUTURES_SPOT_DIFF
 
-        print(f"[fetch] XAUUSD: ${price:,.2f} | Acuan jam 08:00 WIB ({tanggal_acuan}): ${prev_close:,.2f}")
+        print(f"[fetch] XAUUSD: ${price:,.2f} | Acuan jam {JAM_ACUAN:02d}:00 WIB ({tanggal_acuan}): ${prev_close:,.2f}")
         return price, prev_close
     except Exception as e:
         print(f"[fetch] ERROR ambil XAUUSD: {e}")
