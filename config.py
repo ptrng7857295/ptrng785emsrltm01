@@ -19,8 +19,8 @@ EXCHANGE_API_URL    = f"https://v6.exchangerate-api.com/v6/{EXCHANGE_API_KEY}/pa
 
 # ─── KONSTANTA ANTAM ───────────────────────────────────────
 # Formula: Harga Antam = (harga spot XAU/gram) × faktor markup Antam
-ANTAM_JUAL_MARKUP   = 1.10   # +10% dari harga spot (sesuaikan dengan kondisi pasar)
-ANTAM_BUYBACK_MARKUP = 1.007 # +1% dari harga spot
+ANTAM_JUAL_MARKUP   = 1.105   # +10.5% dari harga spot (sesuaikan dengan kondisi pasar)
+ANTAM_BUYBACK_MARKUP = 1.009 # +0.9% dari harga spot
 
 # ─── IMAGE CONFIG ──────────────────────────────────────────
 TEMPLATE_PATH       = "template/chart_bg.png"
