@@ -77,7 +77,7 @@ def build_caption(data: dict) -> str:
         f"⚡ UPDATE HARGA EMAS ⚡ \n 📆 {timestamp}\n"
         f"{arah} {sign_pct}{change_pct:.2f}%\n"
         f"Perubahan: IDR {sign_idr}{fmt_idr_caption(change_idr, prefix='')}/gr\n\n"
-        f"BrankasEmas(dot)com ✔ Update spot emas global realtime (tiap 10 menit) \n {random.choice(PROMOSI_LIST)}\n"
+        f"Kunjungi BrankasEmas(dot)com ✔ Update spot emas global realtime (tiap 10 menit) \n\n {random.choice(PROMOSI_LIST)}\n"
         f"{random.choice(HASHTAG_LIST)}\n"
     )
 
