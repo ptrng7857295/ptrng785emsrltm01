@@ -49,6 +49,7 @@ def build_caption(data: dict) -> str:
     caption = (
         f"⚡ Harga emas {arah} {sign_pct}{change_pct:.2f} IDR {sign_idr}{fmt_idr_caption(change_idr, prefix='')}/gr" 
         f"📆 {timestamp}\n"
+        f"{usd_idr}\n"
 
     )
 
