@@ -56,9 +56,9 @@ def build_caption(data: dict) -> str:
     sign_pct  = "+" if change_pct >= 0 else ""
 
     caption = (
-        f"⚡ Harga emas {arah} IDR {sign_idr}{fmt_idr_caption(change_idr, prefix='')}/gr\n" 
+        f"⚡ Harga emas saat ini  {arah} IDR {sign_idr}{fmt_idr_caption(change_idr, prefix='')}/gr\n" 
         f"📆 {timestamp}\n"
-        f"KURS: {fmt_rp(usd_idr)}\n"
+        f"💱 KURS: {fmt_rp(usd_idr)}\n"
 
     )
 
