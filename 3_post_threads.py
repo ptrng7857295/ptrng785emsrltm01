@@ -30,6 +30,10 @@ def fmt_idr_caption(value: float, prefix: str = "Rp ") -> str:
     """Format angka IDR untuk caption: titik sebagai pemisah ribuan"""
     return f"{prefix}{abs(value):,.0f}".replace(",", ".")
 
+def fmt_usd(value: float) -> str:
+    """Format USD: gunakan koma sebagai pemisah ribuan, titik desimal"""
+    return f"${value:,.2f}"
+    
 
 def build_caption(data: dict) -> str:
     """Buat caption teks untuk post Threads"""
@@ -47,9 +51,9 @@ def build_caption(data: dict) -> str:
     sign_pct  = "+" if change_pct >= 0 else ""
 
     caption = (
-        f"⚡ Harga emas {arah} {sign_pct} IDR {sign_idr}{fmt_idr_caption(change_idr, prefix='')}/gr\n" 
+        f"⚡ Harga emas {arah} IDR {sign_idr}{fmt_idr_caption(change_idr, prefix='')}/gr\n" 
         f"📆 {timestamp}\n"
-        f"{usd_idr}\n"
+        f"KURS: {fmt_rp(usd_idr)}\n"
 
     )
 
