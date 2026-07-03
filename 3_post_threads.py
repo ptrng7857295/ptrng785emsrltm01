@@ -51,7 +51,7 @@ def build_caption(data: dict) -> str:
     usd_idr      = data.get("usd_idr", 0)
     timestamp    = data.get("timestamp", "")
 
-    arah      = "📈 NAIK" if change_pct >= 0 else "📉 TURUN"
+    arah      = "NAIK 📈 " if change_pct >= 0 else "TURUN 📉 "
     sign_idr  = "+" if change_idr >= 0 else "-"
     sign_pct  = "+" if change_pct >= 0 else ""
 
