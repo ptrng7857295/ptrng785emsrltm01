@@ -30,9 +30,9 @@ def fmt_idr_caption(value: float, prefix: str = "Rp ") -> str:
     """Format angka IDR untuk caption: titik sebagai pemisah ribuan"""
     return f"{prefix}{abs(value):,.0f}".replace(",", ".")
 
-def fmt_usd(value: float) -> str:
-    """Format USD: gunakan koma sebagai pemisah ribuan, titik desimal"""
-    return f"${value:,.2f}"
+def fmt_rp(value: float) -> str:
+    """Format ke Rp dengan titik pemisah ribuan"""
+    return fmt_idr(value, prefix="Rp ")
     
 
 def build_caption(data: dict) -> str:
