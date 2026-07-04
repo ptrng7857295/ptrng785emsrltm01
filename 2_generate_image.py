@@ -186,7 +186,7 @@ def generate_image(data: dict) -> str:
     kurs_text = f" {timestamp} | KURS: {fmt_rp(usd_idr)}  "
     draw.text((24, y4), kurs_text, font=font_xs, fill=COLOR_GRAY)
 
-    wm_text = "@brankasemas.idn"
+    wm_text = "@BrankasEmas.idn"
     wm_w    = draw.textlength(wm_text, font=font_xs)
     draw.text((W - wm_w - 24, y4), wm_text, font=font_xs, fill=COLOR_WHITE)
 
