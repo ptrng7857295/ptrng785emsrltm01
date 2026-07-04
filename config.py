@@ -26,7 +26,7 @@ ANTAM_BUYBACK_MARKUP = 1.009 # +0.9% dari harga spot
 TEMPLATE_PATH       = "template/chart_bg.png"
 OUTPUT_PATH         = "output/latest.png"
 IMAGE_WIDTH         = 1080
-IMAGE_HEIGHT        = 430
+IMAGE_HEIGHT        = 440
 
 # Font (download dari Google Fonts: Inter atau Roboto)
 FONT_PATH_BOLD      = "fonts/Inter-Bold.ttf"
