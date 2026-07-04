@@ -181,7 +181,7 @@ def generate_image(data: dict) -> str:
     # ────────────────────────────────────────────────────────
     # ROW BAWAH: Kurs + Timestamp + Watermark
     # ────────────────────────────────────────────────────────
-    y4 = H - 70
+    y4 = H - 90
 
     kurs_text = f" {timestamp} | KURS: {fmt_rp(usd_idr)}  "
     draw.text((24, y4), kurs_text, font=font_xs, fill=COLOR_GRAY)
