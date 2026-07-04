@@ -69,7 +69,7 @@ def generate_image(data: dict) -> str:
     arrow        = "▲" if is_up else "▼"
 
     # ── Pilih template berdasarkan arah harga ─────────────────
-    template_path = TEMPLATE_PATH_NAIK if is_up else TEMPLATE_PATH_TURUN
+    TEMPLATE_PATH = TEMPLATE_PATH_NAIK if is_up else TEMPLATE_PATH_TURUN
     
     # ── Buat canvas ───────────────────────────────────────────
     if os.path.exists(TEMPLATE_PATH):
