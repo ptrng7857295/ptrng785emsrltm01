@@ -23,7 +23,8 @@ ANTAM_JUAL_MARKUP   = 1.112   # +11.2% dari harga spot (sesuaikan dengan kondisi
 ANTAM_BUYBACK_MARKUP = 1.009 # +0.9% dari harga spot
 
 # ─── IMAGE CONFIG ──────────────────────────────────────────
-TEMPLATE_PATH       = "template/chart_bg.png"
+TEMPLATE_PATH_NAIK  = "template/chart_bg_naik.png"
+TEMPLATE_PATH_TURUN = "template/chart_bg_turun.png"
 OUTPUT_PATH         = "output/latest.png"
 IMAGE_WIDTH         = 1080
 IMAGE_HEIGHT        = 440
