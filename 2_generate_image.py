@@ -64,6 +64,12 @@ def generate_image(data: dict) -> str:
     └─────────────────────────────────────────────────────────┘
 
     """
+    is_up        = change_pct >= 0
+    color_change = COLOR_GREEN if is_up else COLOR_RED
+    arrow        = "▲" if is_up else "▼"
+
+    # ── Pilih template berdasarkan arah harga ─────────────────
+    template_path = TEMPLATE_PATH_NAIK if is_up else TEMPLATE_PATH_TURUN
     
     # ── Buat canvas ───────────────────────────────────────────
     if os.path.exists(TEMPLATE_PATH):
@@ -93,13 +99,6 @@ def generate_image(data: dict) -> str:
     change_idr    = data.get("change_idr", 0)
     usd_idr       = data.get("usd_idr", 0)
     timestamp     = data.get("timestamp", "")
-
-    is_up        = change_pct >= 0
-    color_change = COLOR_GREEN if is_up else COLOR_RED
-    arrow        = "▲" if is_up else "▼"
-
-    # ── Pilih template berdasarkan arah harga ─────────────────
-    template_path = TEMPLATE_PATH_NAIK if is_up else TEMPLATE_PATH_TURUN
     
     # ── Ukuran canvas ─────────────────────────────────────
     W = IMAGE_WIDTH   # 1080
