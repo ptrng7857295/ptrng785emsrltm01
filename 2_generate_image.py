@@ -2,7 +2,7 @@ from PIL import Image, ImageDraw, ImageFont
 import os
 from config import (
     OUTPUT_PATH, IMAGE_WIDTH, IMAGE_HEIGHT,
-    TEMPLATE_PATH,
+    TEMPLATE_PATH_NAIK, TEMPLATE_PATH_TURUN,   # ganti TEMPLATE_PATH
     FONT_PATH_BOLD, FONT_PATH_REGULAR,
     COLOR_BG, COLOR_WHITE, COLOR_RED, COLOR_GREEN,
     COLOR_YELLOW, COLOR_GRAY, COLOR_ACCENT
@@ -65,6 +65,8 @@ def generate_image(data: dict) -> str:
 
     """
 
+    # ── Pilih template berdasarkan arah harga ─────────────────
+    template_path = TEMPLATE_PATH_NAIK if is_up else TEMPLATE_PATH_TURUN
     
     # ── Buat canvas ───────────────────────────────────────────
     if os.path.exists(TEMPLATE_PATH):
