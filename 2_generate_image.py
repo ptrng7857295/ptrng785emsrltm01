@@ -64,9 +64,6 @@ def generate_image(data: dict) -> str:
     └─────────────────────────────────────────────────────────┘
 
     """
-
-    # ── Pilih template berdasarkan arah harga ─────────────────
-    template_path = TEMPLATE_PATH_NAIK if is_up else TEMPLATE_PATH_TURUN
     
     # ── Buat canvas ───────────────────────────────────────────
     if os.path.exists(TEMPLATE_PATH):
@@ -101,6 +98,8 @@ def generate_image(data: dict) -> str:
     color_change = COLOR_GREEN if is_up else COLOR_RED
     arrow        = "▲" if is_up else "▼"
 
+    # ── Pilih template berdasarkan arah harga ─────────────────
+    template_path = TEMPLATE_PATH_NAIK if is_up else TEMPLATE_PATH_TURUN
     
     # ── Ukuran canvas ─────────────────────────────────────
     W = IMAGE_WIDTH   # 1080
