@@ -64,6 +64,17 @@ def generate_image(data: dict) -> str:
     └─────────────────────────────────────────────────────────┘
 
     """
+
+    # ── Data ──────────────────────────────────────────────────
+    xauusd_oz     = data.get("xauusd_oz", 0)
+    idr_per_gram  = data.get("idr_per_gram", 0)
+    antam_jual    = data.get("antam_jual", 0)
+    antam_buyback = data.get("antam_buyback", 0)
+    change_pct    = data.get("change_pct", 0)
+    change_idr    = data.get("change_idr", 0)
+    usd_idr       = data.get("usd_idr", 0)
+    timestamp     = data.get("timestamp", "")
+    
     is_up        = change_pct >= 0
     color_change = COLOR_GREEN if is_up else COLOR_RED
     arrow        = "▲" if is_up else "▼"
@@ -90,15 +101,7 @@ def generate_image(data: dict) -> str:
     font_xs1 = load_font(FONT_PATH_REGULAR, 30)
 
     
-    # ── Data ──────────────────────────────────────────────────
-    xauusd_oz     = data.get("xauusd_oz", 0)
-    idr_per_gram  = data.get("idr_per_gram", 0)
-    antam_jual    = data.get("antam_jual", 0)
-    antam_buyback = data.get("antam_buyback", 0)
-    change_pct    = data.get("change_pct", 0)
-    change_idr    = data.get("change_idr", 0)
-    usd_idr       = data.get("usd_idr", 0)
-    timestamp     = data.get("timestamp", "")
+
     
     # ── Ukuran canvas ─────────────────────────────────────
     W = IMAGE_WIDTH   # 1080
