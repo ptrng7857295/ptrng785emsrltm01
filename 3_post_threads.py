@@ -59,7 +59,6 @@ def build_caption(data: dict) -> str:
         f"⚡ Harga emas  {arah} IDR {sign_idr}{fmt_idr_caption(change_idr, prefix='')}/gr\n" 
         f"📆 {timestamp}\n"
         f"🇺🇸➡️🇮🇩  KURS: {fmt_rp(usd_idr)}\n"
-        f"⚠️ Harga saat ini sedang freeze (Sabtu & Minggu)\n"
 
     )
 
