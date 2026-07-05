@@ -27,7 +27,7 @@ TEMPLATE_PATH_NAIK  = "template/chart_bg_naik.png"
 TEMPLATE_PATH_TURUN = "template/chart_bg_turun.png"
 OUTPUT_PATH         = "output/latest.png"
 IMAGE_WIDTH         = 1080
-IMAGE_HEIGHT        = 440
+IMAGE_HEIGHT        = 500
 
 # Font (download dari Google Fonts: Inter atau Roboto)
 FONT_PATH_BOLD      = "fonts/Inter-Bold.ttf"
