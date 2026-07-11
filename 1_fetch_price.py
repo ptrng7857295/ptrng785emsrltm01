@@ -13,6 +13,7 @@ from config import (
 TROY_OZ_TO_GRAM    = 31.1035
 FUTURES_SPOT_DIFF  = 17.0  # Koreksi selisih Futures vs Spot
 JAM_ACUAN          = 7     # Jam acuan perbandingan harga (WIB) — ubah cukup di sini
+MENIT_ACUAN        = 30  # Menit acuan (0-59) — ubah di sini jika perlu
 
 
 def fetch_xauusd() -> tuple[float, float]:
@@ -39,19 +40,21 @@ def fetch_xauusd() -> tuple[float, float]:
         hist.index = hist.index.tz_convert(WIB)
 
         now_wib = datetime.now(WIB)
+        waktu_acuan_menit = JAM_ACUAN * 60 + MENIT_ACUAN
+        waktu_sekarang_menit = now_wib.hour * 60 + now_wib.minute
 
         # Tentukan tanggal acuan — selalu jam JAM_ACUAN WIB
-        if now_wib.hour >= JAM_ACUAN:
+        if waktu_sekarang_menit >= waktu_acuan_menit:
             tanggal_acuan = now_wib.date()
         else:
-            # Sebelum JAM_ACUAN → acuan adalah KEMARIN jam JAM_ACUAN
             tanggal_acuan = (now_wib - timedelta(days=1)).date()
-
+        
         target = hist[
-            (hist.index.date == tanggal_acuan) & (hist.index.hour == JAM_ACUAN) &
-            (hist.index.minute < 10)   # ambil candle 5 menit pertama di jam acuan
+            (hist.index.date == tanggal_acuan) &
+            (hist.index.hour == JAM_ACUAN) &
+            (hist.index.minute >= MENIT_ACUAN) &
+            (hist.index.minute < MENIT_ACUAN + 5)
         ]
-
         
         if not target.empty:
             prev_close = float(target["Close"].iloc[0]) - FUTURES_SPOT_DIFF
