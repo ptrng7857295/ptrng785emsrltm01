@@ -13,7 +13,7 @@ from config import (
 TROY_OZ_TO_GRAM    = 31.1035
 FUTURES_SPOT_DIFF  = 17.0  # Koreksi selisih Futures vs Spot
 JAM_ACUAN          = 7     # Jam acuan perbandingan harga (WIB) — ubah cukup di sini
-MENIT_ACUAN        = 30  # Menit acuan (0-59) — ubah di sini jika perlu
+MENIT_ACUAN        = 45  # Menit acuan (0-59) — ubah di sini jika perlu
 
 
 def fetch_xauusd() -> tuple[float, float]:
