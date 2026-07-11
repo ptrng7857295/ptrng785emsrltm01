@@ -35,7 +35,7 @@ def fetch_xauusd() -> tuple[float, float]:
         info   = ticker.fast_info
         price  = float(info["last_price"]) - FUTURES_SPOT_DIFF
 
-        hist = ticker.history(period="5d", interval="1h")
+        hist = ticker.history(period="5d", interval="5m")
         hist.index = hist.index.tz_convert(WIB)
 
         now_wib = datetime.now(WIB)
@@ -48,9 +48,11 @@ def fetch_xauusd() -> tuple[float, float]:
             tanggal_acuan = (now_wib - timedelta(days=1)).date()
 
         target = hist[
-            (hist.index.date == tanggal_acuan) & (hist.index.hour == JAM_ACUAN)
+            (hist.index.date == tanggal_acuan) & (hist.index.hour == JAM_ACUAN) &
+            (hist.index.minute < 10)   # ambil candle 5 menit pertama di jam acuan
         ]
 
+        
         if not target.empty:
             prev_close = float(target["Close"].iloc[0]) - FUTURES_SPOT_DIFF
         else:
