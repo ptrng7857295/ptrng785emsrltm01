@@ -56,11 +56,10 @@ def build_caption(data: dict) -> str:
     sign_pct  = "+" if change_pct >= 0 else ""
 
     caption = (
+        f"harga sedang freeze/last closed (Sabtu & Minggu)"
         f"⚡ Emas  {arah} IDR {sign_idr}{fmt_idr_caption(change_idr, prefix='')}/gr\n" 
         f"📆 {timestamp}\n"
         f"🇮🇩 KURS: {fmt_rp(usd_idr)}\n"
-        f"harga sedang freeze/last closed (Sabtu & Minggu)"
-
     )
 
     return caption
