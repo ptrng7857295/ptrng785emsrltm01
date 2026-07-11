@@ -67,7 +67,7 @@ def fetch_xauusd() -> tuple[float, float]:
                 # Fallback 2: pakai candle paling awal yang tersedia di histori
                 prev_close = float(hist["Close"].iloc[0]) - FUTURES_SPOT_DIFF
 
-        print(f"[fetch] XAUUSD: ${price:,.2f} | Acuan jam {JAM_ACUAN:02d}:00 WIB ({tanggal_acuan}): ${prev_close:,.2f}")
+        print(f"[fetch] XAUUSD: ${price:,.2f} | Acuan jam {JAM_ACUAN:02d}:{MENIT_ACUAN:02d} WIB ({tanggal_acuan}): ${prev_close:,.2f}")
         return price, prev_close
     except Exception as e:
         print(f"[fetch] ERROR ambil XAUUSD: {e}")
