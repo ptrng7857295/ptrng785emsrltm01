@@ -45,6 +45,7 @@ def build_caption(data: dict) -> str:
 
     change_pct   = data.get("change_pct", 0)
     change_idr   = data.get("change_idr", 0)
+    xauusd_oz    = data.get("xauusd_oz", 0)
     idr_per_gram = data.get("idr_per_gram", 0)
     antam_jual   = data.get("antam_jual", 0)
     antam_buyback= data.get("antam_buyback", 0)
@@ -58,6 +59,7 @@ def build_caption(data: dict) -> str:
     caption = (
         f"⚡ Emas  {arah} IDR {sign_idr}{fmt_idr_caption(change_idr, prefix='')}/gr\n" 
         f"📆 {timestamp}\n"
+        f"Troy Oz {xauusd_oz}\n"
         f"🇮🇩 KURS: {fmt_rp(usd_idr)}\n"
     )
 
