@@ -12,8 +12,10 @@ from config import (
 
 TROY_OZ_TO_GRAM    = 31.1035
 FUTURES_SPOT_DIFF  = 17.0  # Koreksi selisih Futures vs Spot
-JAM_ACUAN          = 3     # Jam acuan perbandingan harga (WIB) — ubah cukup di sini
-MENIT_ACUAN        = 55  # Menit acuan (0-59) — ubah di sini jika perlu
+JAM_ACUAN          = 3     # Jam acuan baseline (WIB)
+MENIT_ACUAN        = 55    # Menit acuan baseline
+JAM_GANTI_ACUAN    = 8     # Acuan berganti tanggal saat melewati jam ini
+MENIT_GANTI_ACUAN  = 55    # Menit ganti acuan
 
 
 def fetch_xauusd() -> tuple[float, float]:
@@ -21,9 +23,17 @@ def fetch_xauusd() -> tuple[float, float]:
     Ambil harga XAUUSD realtime dari Yahoo Finance (GC=F = Gold Futures).
     Dikurangi FUTURES_SPOT_DIFF untuk mendekati harga spot TradingView.
 
-    Acuan perbandingan: SELALU jam JAM_ACUAN WIB (lihat konstanta di atas).
-    - Jam JAM_ACUAN:00 - 23:59 WIB → acuan hari ini jam JAM_ACUAN:00
-    - Jam 00:00 - (JAM_ACUAN-1):59 WIB → acuan KEMARIN jam JAM_ACUAN:00
+    Logika acuan:
+    - Jam 08:00 - 23:59 WIB → acuan HARI INI jam 04:00
+    - Jam 00:00 - 07:59 WIB → acuan KEMARIN jam 04:00
+
+    Contoh:
+    - 17 Jul 07:21 → acuan 16 Jul 04:00
+    - 17 Jul 11:00 → acuan 17 Jul 04:00
+    - 18 Jul 03:00 → acuan 17 Jul 04:00
+    - 18 Jul 09:00 → acuan 18 Jul 04:00
+
+    Baseline berlaku selama ~28 jam (04:00 hari ini s/d 08:00 keesokan harinya).
 
     Fallback berlapis jika candle jam acuan tidak ditemukan:
     1. Cari candle jam JAM_ACUAN WIB manapun yang paling baru (5 hari ke belakang)
@@ -40,22 +50,26 @@ def fetch_xauusd() -> tuple[float, float]:
         hist.index = hist.index.tz_convert(WIB)
 
         now_wib = datetime.now(WIB)
-        waktu_acuan_menit = JAM_ACUAN * 60 + MENIT_ACUAN
+
+        # Tentukan tanggal acuan:
+        # Sudah lewat JAM_GANTI_ACUAN:MENIT_GANTI_ACUAN → pakai hari ini
+        # Belum lewat → pakai kemarin
+        waktu_ganti_menit    = JAM_GANTI_ACUAN * 60 + MENIT_GANTI_ACUAN
         waktu_sekarang_menit = now_wib.hour * 60 + now_wib.minute
 
-        # Tentukan tanggal acuan — selalu jam JAM_ACUAN WIB
-        if waktu_sekarang_menit >= waktu_acuan_menit:
+        if waktu_sekarang_menit >= waktu_ganti_menit:
             tanggal_acuan = now_wib.date()
         else:
             tanggal_acuan = (now_wib - timedelta(days=1)).date()
-        
+
+        # Cari candle jam JAM_ACUAN:MENIT_ACUAN WIB di tanggal acuan
         target = hist[
             (hist.index.date == tanggal_acuan) &
             (hist.index.hour == JAM_ACUAN) &
             (hist.index.minute >= MENIT_ACUAN) &
             (hist.index.minute < MENIT_ACUAN + 5)
         ]
-        
+
         if not target.empty:
             prev_close = float(target["Close"].iloc[0]) - FUTURES_SPOT_DIFF
         else:
@@ -67,7 +81,9 @@ def fetch_xauusd() -> tuple[float, float]:
                 # Fallback 2: pakai candle paling awal yang tersedia di histori
                 prev_close = float(hist["Close"].iloc[0]) - FUTURES_SPOT_DIFF
 
-        print(f"[fetch] XAUUSD: ${price:,.2f} | Acuan jam {JAM_ACUAN:02d}:{MENIT_ACUAN:02d} WIB ({tanggal_acuan}): ${prev_close:,.2f}")
+        print(f"[fetch] XAUUSD       : ${price:,.2f}")
+        print(f"[fetch] Baseline dari : {tanggal_acuan} jam {JAM_ACUAN:02d}:{MENIT_ACUAN:02d} WIB")
+        print(f"[fetch] Harga baseline: ${prev_close:,.2f}")
         return price, prev_close
     except Exception as e:
         print(f"[fetch] ERROR ambil XAUUSD: {e}")
