@@ -69,43 +69,18 @@ def build_caption(data: dict) -> str:
     return caption
 
 
-def create_media_container(image_path: str, caption: str) -> str | None:
+def get_image_url() -> str:
+    """Pakai GitHub raw URL langsung — tidak perlu upload ke host lain"""
+    # GANTI NAMA_REPO dengan nama repo GitHub kamu
+    return "https://raw.githubusercontent.com/ptrng7857295/ptrng785emsrltm01/main/output/latest.png"
+
+
+def create_media_container(image_url: str, caption: str) -> str | None:
     """
-    Step 1: Upload gambar ke Threads → dapat media container ID.
-    Gambar harus bisa diakses via URL publik.
-    
-    CATATAN: Threads API memerlukan URL publik, bukan upload file langsung.
-    Opsi: upload dulu ke imgbb.com / Cloudinary / server sendiri.
-    Di sini kita pakai imgbb (gratis).
+    Step 1: Buat media container di Threads pakai URL gambar dari GitHub.
     """
-
-    # ── Upload ke ImgBB dulu (gratis, dapat URL publik) ────
-    IMGBB_API_KEY = os.getenv("IMGBB_API_KEY", "")
-
-    with open(image_path, "rb") as f:
-        img_data = f.read()
-
-    import base64
-    encoded = base64.b64encode(img_data).decode("utf-8")
-
-    imgbb_res = requests.post(
-        "https://api.imgbb.com/1/upload",
-        data={
-            "key": IMGBB_API_KEY,
-            "image": encoded,
-            "expiration": 600  # hapus otomatis setelah 10 menit
-        },
-        timeout=30
-    )
-
-    if imgbb_res.status_code != 200:
-        print(f"[post] ERROR upload ImgBB: {imgbb_res.text}")
-        return None
-
-    image_url = imgbb_res.json()["data"]["url"]
     print(f"[post] Gambar tersedia di: {image_url}")
 
-    # ── Buat media container di Threads ────────────────────
     url = f"{BASE_URL}/{THREADS_USER_ID}/threads"
     params = {
         "media_type"    : "IMAGE",
@@ -150,14 +125,15 @@ def publish_container(container_id: str) -> bool:
 
 
 def post_to_threads(data: dict, image_path: str = OUTPUT_PATH) -> bool:
-    """Fungsi utama: build caption → upload gambar → post ke Threads"""
+    """Fungsi utama: build caption → ambil URL gambar → post ke Threads"""
 
     if not THREADS_USER_ID or not THREADS_ACCESS_TOKEN:
         print("[post] ⚠️  THREADS_USER_ID atau THREADS_ACCESS_TOKEN belum diset di .env")
         return False
 
     caption      = build_caption(data)
-    container_id = create_media_container(image_path, caption)
+    image_url    = get_image_url()
+    container_id = create_media_container(image_url, caption)
 
     if not container_id:
         return False
