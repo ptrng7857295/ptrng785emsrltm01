@@ -1,6 +1,8 @@
 import requests
 import time
 import os
+import cloudinary
+import cloudinary.uploader
 from config import THREADS_USER_ID, THREADS_ACCESS_TOKEN, OUTPUT_PATH
 
 BASE_URL = "https://graph.threads.net/v1.0"
@@ -23,7 +25,6 @@ PROMOSI_LIST = [
     "Grup khusus pantau harga emas, join via link yang ada di bio ya",
     "Update harga emas realtime langsung di grup kami, link bergabung di bio 💰",
 ]
-
 
 
 def fmt_idr_caption(value: float, prefix: str = "Rp ") -> str:
@@ -60,7 +61,7 @@ def build_caption(data: dict) -> str:
     sign_pct  = "+" if change_pct >= 0 else ""
 
     caption = (
-        f"⚡ Emas  {arah} IDR {sign_idr}{fmt_idr_caption(change_idr, prefix='')}/gr\n" 
+        f"⚡ Emas  {arah} IDR {sign_idr}{fmt_idr_caption(change_idr, prefix='')}/gr\n"
         f"📆 {timestamp}\n"
         f"USD/oz: {fmt_usd(xauusd_oz)}\n"
         f"🇮🇩 KURS: {fmt_rp(usd_idr)}\n"
@@ -69,18 +70,32 @@ def build_caption(data: dict) -> str:
     return caption
 
 
-def get_image_url() -> str:
-    """Pakai GitHub raw URL langsung — tidak perlu upload ke host lain"""
-    # GANTI NAMA_REPO dengan nama repo GitHub kamu
-    return "https://raw.githubusercontent.com/ptrng7857295/ptrng785emsrltm01/main/output/latest.png"
+def upload_to_cloudinary(image_path: str) -> str | None:
+    """Upload gambar ke Cloudinary, dapat URL publik yang diterima Threads API"""
+    cloudinary.config(
+        cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME", ""),
+        api_key    = os.getenv("CLOUDINARY_API_KEY", ""),
+        api_secret = os.getenv("CLOUDINARY_API_SECRET", "")
+    )
+    try:
+        result = cloudinary.uploader.upload(
+            image_path,
+            public_id     = "emasrealtime/latest",
+            overwrite     = True,
+            resource_type = "image"
+        )
+        url = result.get("secure_url")
+        print(f"[post] Gambar tersedia di: {url}")
+        return url
+    except Exception as e:
+        print(f"[post] ERROR upload Cloudinary: {e}")
+        return None
 
 
 def create_media_container(image_url: str, caption: str) -> str | None:
     """
-    Step 1: Buat media container di Threads pakai URL gambar dari GitHub.
+    Step 1: Buat media container di Threads pakai URL gambar dari Cloudinary.
     """
-    print(f"[post] Gambar tersedia di: {image_url}")
-
     url = f"{BASE_URL}/{THREADS_USER_ID}/threads"
     params = {
         "media_type"    : "IMAGE",
@@ -125,14 +140,18 @@ def publish_container(container_id: str) -> bool:
 
 
 def post_to_threads(data: dict, image_path: str = OUTPUT_PATH) -> bool:
-    """Fungsi utama: build caption → ambil URL gambar → post ke Threads"""
+    """Fungsi utama: build caption → upload Cloudinary → post ke Threads"""
 
     if not THREADS_USER_ID or not THREADS_ACCESS_TOKEN:
         print("[post] ⚠️  THREADS_USER_ID atau THREADS_ACCESS_TOKEN belum diset di .env")
         return False
 
     caption      = build_caption(data)
-    image_url    = get_image_url()
+    image_url    = upload_to_cloudinary(image_path)
+
+    if not image_url:
+        return False
+
     container_id = create_media_container(image_url, caption)
 
     if not container_id:
