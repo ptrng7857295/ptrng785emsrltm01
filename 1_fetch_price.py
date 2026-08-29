@@ -11,7 +11,7 @@ from config import (
 )
 
 TROY_OZ_TO_GRAM    = 31.1035
-FUTURES_SPOT_DIFF  = 17.0  # Koreksi selisih Futures vs Spot
+FUTURES_SPOT_DIFF  = 33.0  # Koreksi selisih Futures vs Spot 17 jadi 33
 JAM_ACUAN          = 3     # Jam acuan baseline (WIB)
 MENIT_ACUAN        = 55    # Menit acuan baseline
 JAM_GANTI_ACUAN    = 8     # Acuan berganti tanggal saat melewati jam ini
