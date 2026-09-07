@@ -1,5 +1,6 @@
 import requests
 import json
+import time
 import yfinance as yf
 from datetime import datetime, timezone, timedelta
 
