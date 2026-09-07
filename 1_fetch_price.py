@@ -46,6 +46,19 @@ def fetch_xauusd() -> tuple[float, float]:
         info   = ticker.fast_info
         price  = float(info["last_price"]) - FUTURES_SPOT_DIFF
 
+
+        price = 0.0
+        for attempt in range(3):
+            try:
+                ticker = yf.Ticker("GC=F")
+                info   = ticker.fast_info
+                price  = float(info["last_price"]) - FUTURES_SPOT_DIFF
+                if price > 0:
+                    break
+            except Exception as e:
+                print(f"[fetch] Attempt {attempt+1} gagal: {e}")
+                time.sleep(5)
+                
         hist = ticker.history(period="5d", interval="5m")
         hist.index = hist.index.tz_convert(WIB)
 
