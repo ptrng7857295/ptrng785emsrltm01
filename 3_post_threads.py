@@ -65,7 +65,6 @@ def build_caption(data: dict) -> str:
         f"📆 {timestamp}\n"
         f"USD/oz: {fmt_usd(xauusd_oz)}\n"
         f"🇮🇩 KURS: {fmt_rp(usd_idr)}\n"
-        f"@meta.ai \n"
     )
 
     return caption
