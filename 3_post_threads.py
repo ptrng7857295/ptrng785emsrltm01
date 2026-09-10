@@ -10,7 +10,25 @@ BASE_URL = "https://graph.threads.net/v1.0"
 import random
 
 HASHTAG_LIST = [
-    "Antamlogammulia",
+    "#finansial",
+    "#Antamlogammulia",
+    "#grupwajualbeliantam",
+    "#emas",
+    "#Jualemas",
+    "#emasantamlogammulia",
+    "#emas hari ini",
+    "#investasiemas",
+    "#brankasemas",
+    "#HargaEmasHariIni",
+    "#juallogammulia",
+    "#logammuliaantam",
+    "#emasantam",
+    "#GoldThreads",
+    "#Nyabarantam",
+    "#LogamMulia",
+    "#jewelrythreads",
+    "#investing",
+    "#jakarta",
 ]
 
 
@@ -65,6 +83,7 @@ def build_caption(data: dict) -> str:
         f"📆 {timestamp}\n"
         f"USD/oz: {fmt_usd(xauusd_oz)}\n"
         f"🇮🇩 KURS: {fmt_rp(usd_idr)}\n"
+        f"{random.choice(HASHTAG_LIST)}\n"
     )
 
     return caption
